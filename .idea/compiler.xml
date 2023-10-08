@@ -1,15 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="delivery-service" />
+        <module name="order-service" />
+        <module name="kitchen-service" />
+        <module name="notification-service" />
+      </profile>
+    </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="common" target="9" />
-      <module name="delivery-service" target="11" />
-      <module name="dependency-bom" target="11" />
-      <module name="kitchen-service" target="11" />
-      <module name="liga-education" target="1.8" />
-      <module name="migration" target="11" />
-      <module name="notification-service" target="11" />
-      <module name="order-service" target="11" />
+      <module name="delivery_service" target="11" />
+      <module name="liga_education (1)" target="11" />
+      <module name="liga_education (2)" target="1.8" />
+      <module name="oerder-service" target="11" />
+      <module name="properties-bom" target="11" />
+      <module name="second_day" target="1.7" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="delivery-service" options="-parameters" />
+      <module name="delivery_service" options="-parameters" />
+      <module name="dependency_bom" options="" />
+      <module name="kitchen-service" options="-parameters" />
+      <module name="notification-service" options="-parameters" />
+      <module name="oerder-service" options="-parameters" />
+      <module name="order-service" options="-parameters" />
+      <module name="properties-bom" options="-parameters" />
+    </option>
   </component>
 </project>
