@@ -15,10 +15,11 @@
     </parent>
 
     <modules>
-        <module>delivery_service</module>
         <module>dependency_bom</module>
+        <module>kitchen-service</module>
+        <module>delivery-service</module>
+        <module>notification-service</module>
+        <module>order-service</module>
     </modules>
-
-
 
 </project>

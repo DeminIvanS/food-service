@@ -7,10 +7,9 @@
         <groupId>ru.liga</groupId>
         <artifactId>liga_education</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-
     </parent>
 
-    <artifactId>delivery_service</artifactId>
+    <artifactId>notification-service</artifactId>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
