@@ -7,6 +7,8 @@
     <file url="file://$PROJECT_DIR$/dependency_bom/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/dependency_bom/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kitchen-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/migration/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/migration/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/notification-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/oerder-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/order-service/src/main/java" charset="UTF-8" />

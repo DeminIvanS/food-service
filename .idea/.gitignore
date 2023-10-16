@@ -1,3 +1,12 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+/aws.xml
+/compiler.xml
+/encodings.xml
+/jarRepositories.xml
+/jpa-buddy.xml
+/misc.xml
+/modules.xml
+/uiDesigner.xml
+/vcs.xml

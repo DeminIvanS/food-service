@@ -3,7 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/delivery-service.iml" filepath="$PROJECT_DIR$/delivery-service.iml" />
-      <module fileurl="file://$PROJECT_DIR$/liga_education.iml" filepath="$PROJECT_DIR$/liga_education.iml" />
+      <module fileurl="file://$PROJECT_DIR$/liga-education.iml" filepath="$PROJECT_DIR$/liga-education.iml" />
+      <module fileurl="file://$PROJECT_DIR$/migration.iml" filepath="$PROJECT_DIR$/migration.iml" />
       <module fileurl="file://$PROJECT_DIR$/second_day.iml" filepath="$PROJECT_DIR$/second_day.iml" />
     </modules>
   </component>

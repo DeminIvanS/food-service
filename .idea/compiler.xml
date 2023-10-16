@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="delivery-service" />
+        <module name="migration" />
         <module name="order-service" />
         <module name="kitchen-service" />
         <module name="notification-service" />
@@ -14,6 +15,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="delivery_service" target="11" />
+      <module name="liga_education" target="1.8" />
       <module name="liga_education (1)" target="11" />
       <module name="liga_education (2)" target="1.8" />
       <module name="oerder-service" target="11" />
@@ -27,6 +29,7 @@
       <module name="delivery_service" options="-parameters" />
       <module name="dependency-bom" options="" />
       <module name="kitchen-service" options="-parameters" />
+      <module name="migration" options="-parameters" />
       <module name="notification-service" options="-parameters" />
       <module name="oerder-service" options="-parameters" />
       <module name="order-service" options="-parameters" />
