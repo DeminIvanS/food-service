@@ -23,9 +23,16 @@ public class OrderController {
     public String createOrder(@RequestBody OrderDto orderDto) {
         return "Create new order";
     }
+
+    @PatchMapping("/{id}/{summ}")
     public String updateOrderSumm(@PathVariable("id") Long id,
                                   @PathVariable("summ") Double summ,
                                   OrderDto orderDto){
+        return "Summ order update";
+    }
+    @PatchMapping("/{id}")
+    public String updateOrderSumm2(@PathVariable(value = "id", required = true) Long id,
+                                        @RequestParam("summ") Double summ) {
         return "Summ order update";
     }
 
