@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+    <changeSet id="2023-10-22 15:39:00" author="Ivan">
+        <addForeignKeyConstraint baseTableName="orders" baseColumnNames="customer_id" referencedTableName="customers"
+                                 referencedColumnNames="customer_id" constraintName="customer_order"/>
+
+        <addForeignKeyConstraint baseTableName="orders" baseColumnNames="restaurant_id" referencedTableName="restaurants"
+                                 referencedColumnNames="restaurant_id" constraintName="restaurant_order"/>
+
+
+
+        <addForeignKeyConstraint baseTableName="orders" baseColumnNames="courier_id" referencedTableName="couriers"
+                                 referencedColumnNames="courier_id" constraintName="courier_order"/>
+
+        <addForeignKeyConstraint baseTableName="order_items" baseColumnNames="order_id" referencedTableName="orders"
+                                 referencedColumnNames="order_id" constraintName="order_o_items"/>
+
+        <addForeignKeyConstraint baseTableName="restaurant_menu_items" baseColumnNames="restaurant_id"
+                                 referencedTableName="restaurants" referencedColumnNames="restaurant_id"
+                                 constraintName="restaurant_r_menu_item"/>
+
+    </changeSet>
+
+
+</databaseChangeLog>

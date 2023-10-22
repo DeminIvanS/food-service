@@ -1,0 +1,28 @@
+spring:
+  profiles:
+    active: spring.profiles.active@
+  jpa:
+    hibernate:
+      ddl-auto: none
+  datasource:
+    initialization-mode: always
+    platform: convert
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: admin123
+    url: jdbc:postgresql://localhost:5433/postgres
+    jdbc-url: jdbc:postgresql://localhost:5433/postgres
+  liquibase:
+    change-log: classpath:db/changelog.xml
+
+management:
+endpoints:
+web:
+exposure:
+include: "*" #<2>
+endpoint:
+health:
+show-details: ALWAYS
+
+server:
+  port=8084

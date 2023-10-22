@@ -7,7 +7,7 @@
         <groupId>ru.liga</groupId>
         <artifactId>dependency-bom</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../dependency_bom/pom.xml</relativePath>
+        <relativePath>../dependency-bom/pom.xml</relativePath>
     </parent>
 
     <artifactId>order-service</artifactId>

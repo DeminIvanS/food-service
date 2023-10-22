@@ -6,15 +6,18 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="delivery-service" />
         <module name="migration" />
+        <module name="delivery-service" />
         <module name="order-service" />
+        <module name="common" />
         <module name="kitchen-service" />
         <module name="notification-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="delivery" target="11" />
       <module name="delivery_service" target="11" />
+      <module name="dependency_bom" target="11" />
       <module name="liga_education" target="1.8" />
       <module name="liga_education (1)" target="11" />
       <module name="liga_education (2)" target="1.8" />
@@ -25,9 +28,11 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="common" options="-parameters" />
+      <module name="delivery" options="-parameters" />
       <module name="delivery-service" options="-parameters" />
       <module name="delivery_service" options="-parameters" />
-      <module name="dependency-bom" options="" />
+      <module name="dependency_bom" options="" />
       <module name="kitchen-service" options="-parameters" />
       <module name="migration" options="-parameters" />
       <module name="notification-service" options="-parameters" />

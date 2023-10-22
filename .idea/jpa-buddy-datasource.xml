@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpbDataSourceConfig">
+    <data-sources>
+      <data-source id="88a4fe4c-a418-4d6a-ac3c-459537828185" name="ru-liga-food-service" url="jdbc:postgresql://localhost:5433/postgres" driverClass="org.postgresql.Driver" />
+    </data-sources>
+  </component>
+</project>
