@@ -1,4 +1,4 @@
-package ru.liga.entityes;
+package ru.liga.model.entityes;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,9 +13,19 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderItems implements Serializable {
+public class OrderItem implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "order_item_id")
     private Long id;
+    @ManyToOne
+    @Column(name = "order_id")
+    private Long orderId;
+    @OneToOne
+    @Column(name = "restaurant_menu_item_id")
+    private Long restaurantMenuItem;
+
+    private double price;
+    private double quantity;
+
 }

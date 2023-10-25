@@ -1,4 +1,4 @@
-package ru.liga.entityes;
+package ru.liga.model.entityes;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,16 +8,20 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 
+
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Orders implements Serializable {
+public class Restaurant implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "order_id")
+    @Column(name = "restaurant_id")
     private Long id;
 
+    private String address;
+    private String status;
 
 }

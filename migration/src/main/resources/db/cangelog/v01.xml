@@ -46,7 +46,6 @@
             <column name="restaurant_id" type="BIGINT"/>
             <column name="status" type="varchar(50)"/>
             <column name="courier_id" type="BIGINT"/>
-
             <column name="timestamp" type="timestamp"/>
 
         </createTable>
