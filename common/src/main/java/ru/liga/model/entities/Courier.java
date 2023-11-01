@@ -1,20 +1,18 @@
-package ru.liga.model.entityes;
+package ru.liga.model.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
+@Table(name = "couriers")
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Courier implements Serializable {
+@ToString
+public class Courier{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "couriers_seq_gen")
     @SequenceGenerator(name = "couriers_seq_gen", sequenceName = "couriers_seq", allocationSize = 1)
@@ -24,5 +22,7 @@ public class Courier implements Serializable {
     private String phone;
     private String status;
     private String coordinates;
+
+    @OneToMany(mappedBy = "courier")
     private List<Order> orders;
 }
