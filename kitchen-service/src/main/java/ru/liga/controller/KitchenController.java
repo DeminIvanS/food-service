@@ -10,11 +10,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/restaurant")
-public class RestaurantController {
+public class KitchenController {
 
     private final KitchenService kitchenService;
 
-    public RestaurantController(KitchenService kitchenService) {
+    public KitchenController(KitchenService kitchenService) {
         this.kitchenService = kitchenService;
     }
     @GetMapping("/orders")

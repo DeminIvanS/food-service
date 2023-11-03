@@ -18,6 +18,7 @@ import ru.liga.model.entities.OrderItem;
 import ru.liga.model.entities.Restaurant;
 import ru.liga.model.entities.RestaurantMenuItem;
 import ru.liga.model.enums.OrderStatus;
+import ru.liga.rabbit.RabbitProducerServiceImpl;
 import ru.liga.repository.OrderItemRepository;
 import ru.liga.repository.OrderRepository;
 import ru.liga.repository.RestaurantMenuItemRepository;
@@ -37,16 +38,26 @@ public class KitchenService {
     private final RestaurantMenuItemRepository restaurantMenuItemRepository;
     private final OrderItemRepository orderItemRepository;
     private final OrderRepository orderRepository;
+    private final RabbitProducerServiceImpl rabbitProducerService;
 
     @Autowired
     public KitchenService(RestaurantRepository restaurantRepository,
                           RestaurantMenuItemRepository restaurantMenuItemRepository,
                           OrderItemRepository orderItemRepository,
-                          OrderRepository orderRepository) {
+                          OrderRepository orderRepository, RabbitProducerServiceImpl rabbitProducerService) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantMenuItemRepository = restaurantMenuItemRepository;
         this.orderItemRepository = orderItemRepository;
         this.orderRepository = orderRepository;
+        this.rabbitProducerService = rabbitProducerService;
+    }
+    public void processCourierResponse(String message) {
+
+    }
+    public void processNewOrder(Order order) {
+        order.setStatus(OrderStatus.KITCHEN_ACCEPTED);
+        orderRepository.save(order);
+
     }
 
     private List<OrderItemDto> toOrderItemDto(List<OrderItem> orderItemEntities) {
