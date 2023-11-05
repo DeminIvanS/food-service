@@ -2,7 +2,7 @@ package ru.liga.model.entities;
 
 import lombok.*;
 import lombok.experimental.Accessors;
-import ru.liga.model.enums.OrderStatus;
+import ru.liga.model.statuses.OrderStatus;
 
 import javax.persistence.*;
 import java.util.List;

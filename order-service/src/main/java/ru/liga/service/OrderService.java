@@ -16,7 +16,7 @@ import ru.liga.handler.EntityException;
 import ru.liga.handler.StatusException;
 import ru.liga.mapper.RestaurantMapper;
 import ru.liga.model.entities.*;
-import ru.liga.model.enums.OrderStatus;
+import ru.liga.model.statuses.OrderStatus;
 import ru.liga.repository.*;
 import ru.liga.request.OrderItemReq;
 import ru.liga.request.OrderReq;

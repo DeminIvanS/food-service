@@ -8,5 +8,5 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class OrderChangeDto {
 
-    private String orderAction;
+    private String orderChange;
 }

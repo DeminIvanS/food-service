@@ -17,14 +17,13 @@ import ru.liga.model.entities.Order;
 import ru.liga.model.entities.OrderItem;
 import ru.liga.model.entities.Restaurant;
 import ru.liga.model.entities.RestaurantMenuItem;
-import ru.liga.model.enums.OrderStatus;
+import ru.liga.model.statuses.OrderStatus;
 import ru.liga.rabbit.RabbitProducerServiceImpl;
 import ru.liga.repository.OrderItemRepository;
 import ru.liga.repository.OrderRepository;
 import ru.liga.repository.RestaurantMenuItemRepository;
 import ru.liga.repository.RestaurantRepository;
 
-import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

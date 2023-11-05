@@ -2,7 +2,7 @@ package ru.liga.model.entities;
 
 import lombok.*;
 import lombok.experimental.Accessors;
-import ru.liga.model.enums.OrderStatus;
+import ru.liga.model.statuses.OrderStatus;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -31,16 +31,16 @@ public class Order{
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> itemList = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "courier_courier_id")
+
+    @JoinColumn(name = "courier_id")
     private Courier courier;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_customer_id")
+
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToOne
-    @JoinColumn(name = "restaurant_restaurant_id")
+
+    @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
     public void addOrderItem(OrderItem orderItem){

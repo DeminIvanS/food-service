@@ -1,4 +1,4 @@
-package ru.liga.model.enums;
+package ru.liga.model.statuses;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -30,4 +30,5 @@ public enum OrderStatus {
     DELIVERY_DENIED,
     @Enumerated(EnumType.STRING)
     DELIVERY_REFUNDED
+
 }

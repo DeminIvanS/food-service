@@ -17,7 +17,9 @@ import ru.liga.model.entities.Courier;
 import ru.liga.model.entities.Customer;
 import ru.liga.model.entities.Order;
 import ru.liga.model.entities.Restaurant;
-import ru.liga.model.enums.OrderStatus;
+import ru.liga.model.statuses.CourierStatus;
+import ru.liga.model.statuses.OrderStatus;
+import ru.liga.rabbit.RabbitProducerServiceImpl;
 import ru.liga.repository.CourierRepository;
 import ru.liga.repository.CustomerRepository;
 import ru.liga.repository.OrderRepository;
@@ -35,14 +37,14 @@ import java.util.stream.Collectors;
 public class DeliveryService {
 
     private final OrderRepository orderRepository;
-    private final RabbitMQProducerServiceImpl rabbitMQProducerService;
+    private final RabbitProducerServiceImpl rabbitMQProducerService;
     private final CourierRepository courierRepository;
     private final RestaurantRepository restaurantRepository;
     private final CustomerRepository customerRepository;
 
     @Autowired
     public DeliveryService(OrderRepository orderRepository,
-                           RabbitMQProducerServiceImpl rabbitMQProducerService,
+                           RabbitProducerServiceImpl rabbitMQProducerService,
                            CourierRepository courierRepository,
                            RestaurantRepository restaurantRepository,
                            CustomerRepository customerRepository) {
@@ -88,12 +90,12 @@ public class DeliveryService {
     }
 
 
-    private DeliveryDto toDeliveryDTO(Order order) {
+    private DeliveryDto toDeliveryDto(Order order) {
 
-        Restaurant restaurant = restaurantRepository.findById(order.getRestaurantId())
+        Restaurant restaurant = restaurantRepository.findById(order.getRestaurant().getId())
                 .orElseThrow(() -> new EntityException(StatusException.RESTAURANT_NOT_FOUND));
 
-        Customer customer = customerRepository.findById(order.getCustomerId())
+        Customer customer = customerRepository.findById(order.getCustomer().getId())
                 .orElseThrow(() -> new EntityException(StatusException.CUSTOMER_NOT_FOUND));
 
 
@@ -107,12 +109,10 @@ public class DeliveryService {
         Double distanceFromRestaurantToCustomer = calculateDistance(customerCoordinates, restaurantCoordinates);
 
         RestaurantDto restaurantDto = new RestaurantDto()
-                .setAddress(restaurant.getAddress())
-                .setDistance(distanceFromCourierToRestaurant);
+                .setAddress(restaurant.getAddress());
 
         CustomerDto customerDto = new CustomerDto()
-                .setAddress(customer.getAddress())
-                .setDistance(distanceFromRestaurantToCustomer);
+                .setAddress(customer.getAddress());
 
         return new DeliveryDto()
                 .setOrderId(order.getId())
@@ -132,7 +132,7 @@ public class DeliveryService {
 
         List<Order> orders = orderEntitiesPage.getContent();
         List<DeliveryDto> deliveryDtos = orders.stream()
-                .map(this::OrderToDeliveryDto)
+                .map(this::toDeliveryDto)
                 .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();
@@ -152,7 +152,7 @@ public class DeliveryService {
 
         if (OrderStatus.DELIVERY_PICKING.toString().equals(orderAction)) {
             rabbitMQProducerService.sendMessage("<courier_name> will pick that order!", "courier.response");
-            orderEntity.setCourierId(1L);
+            orderEntity.setCourier(courierRepository.findCourierById(1L));
         } else if (OrderStatus.DELIVERY_DENIED.toString().equals(orderAction)) {
             rabbitMQProducerService.sendMessage("Delivery denied", "courier.response");
         }
@@ -167,7 +167,7 @@ public class DeliveryService {
 
     public void processNewDelivery(Order order) {
 
-        Restaurant restaurant = restaurantRepository.findById(order.getRestaurantId())
+        Restaurant restaurant = restaurantRepository.findById(order.getRestaurant().getId())
                 .orElseThrow(() -> new EntityException(StatusException.RESTAURANT_NOT_FOUND));
         String restaurantCoordinates = restaurant.getAddress();
 
@@ -188,14 +188,14 @@ public class DeliveryService {
         sendMessageToNearbyCourier(courierDistances, order);
     }
 
-    private void sendMessageToNearbyCourier(Map<Double, Courier> nearestCouriers, Order order) {
+    private void sendMessageToNearbyCourier(Map<Double, Courier> nearbyCouriers, Order order) {
 
-        Courier nearestCourier = nearestCouriers.remove(Collections.min(nearestCouriers.keySet()));
+        Courier nearbyCourier = nearbyCouriers.remove(Collections.min(nearbyCouriers.keySet()));
 
-        if (nearestCourier.getStatus().equals(CourierStatus.PICKING)) {
-            order.setCourierId(nearestCourier.getId());
-        } else if (nearestCourier.getStatus().equals(CourierStatus.DENIED)) {
-            sendMessageToNearbyCourier(nearestCouriers, order);
+        if (nearbyCourier.getStatus().equals(CourierStatus.PICKING)) {
+            order.setCourier(nearbyCourier);
+        } else if (nearbyCourier.getStatus().equals(CourierStatus.DENIED)) {
+            sendMessageToNearbyCourier(nearbyCouriers, order);
         }
     }
 }
