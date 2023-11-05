@@ -37,19 +37,19 @@ import java.util.stream.Collectors;
 public class DeliveryService {
 
     private final OrderRepository orderRepository;
-    private final RabbitProducerServiceImpl rabbitMQProducerService;
+    private final RabbitProducerServiceImpl rabbitProducerService;
     private final CourierRepository courierRepository;
     private final RestaurantRepository restaurantRepository;
     private final CustomerRepository customerRepository;
 
     @Autowired
     public DeliveryService(OrderRepository orderRepository,
-                           RabbitProducerServiceImpl rabbitMQProducerService,
+                           RabbitProducerServiceImpl rabbitProducerService,
                            CourierRepository courierRepository,
                            RestaurantRepository restaurantRepository,
                            CustomerRepository customerRepository) {
         this.orderRepository = orderRepository;
-        this.rabbitMQProducerService = rabbitMQProducerService;
+        this.rabbitProducerService = rabbitProducerService;
         this.courierRepository = courierRepository;
         this.restaurantRepository = restaurantRepository;
         this.customerRepository = customerRepository;
@@ -68,12 +68,12 @@ public class DeliveryService {
         double latitude2 = Double.parseDouble(parts2[0].trim());
         double longitude2 = Double.parseDouble(parts2[1].trim());
 
-        double result = calculateMathematically(latitude1, longitude1, latitude2, longitude2);
+        double result = calculateCoordinates(latitude1, longitude1, latitude2, longitude2);
 
         return Math.round(result * 10.0) / 10.0;
     }
 
-    private double calculateMathematically(double latitude1, double longitude1,
+    private double calculateCoordinates(double latitude1, double longitude1,
                                            double latitude2, double longitude2) {
         double earthRadius = 6371;
 
@@ -109,10 +109,12 @@ public class DeliveryService {
         Double distanceFromRestaurantToCustomer = calculateDistance(customerCoordinates, restaurantCoordinates);
 
         RestaurantDto restaurantDto = new RestaurantDto()
-                .setAddress(restaurant.getAddress());
+                .setAddress(restaurant.getAddress())
+                .setDistance(distanceFromCourierToRestaurant);
 
         CustomerDto customerDto = new CustomerDto()
-                .setAddress(customer.getAddress());
+                .setAddress(customer.getAddress())
+                .setDistance(distanceFromRestaurantToCustomer);
 
         return new DeliveryDto()
                 .setOrderId(order.getId())
@@ -124,13 +126,13 @@ public class DeliveryService {
     public ResponseEntity<Map<String, Object>> getDeliveriesByStatus(String status, int pageIndex, int pageSize) {
 
         PageRequest pageRequest = PageRequest.of(pageIndex, pageSize);
-        Page<Order> orderEntitiesPage = orderRepository
+        Page<Order> orderPage = orderRepository
                 .findOrderByStatus(OrderStatus.valueOf(status.toUpperCase()), pageRequest);
 
-        if (orderEntitiesPage.isEmpty())
+        if (orderPage.isEmpty())
             throw new EntityException(StatusException.ORDER_NOT_FOUND);
 
-        List<Order> orders = orderEntitiesPage.getContent();
+        List<Order> orders = orderPage.getContent();
         List<DeliveryDto> deliveryDtos = orders.stream()
                 .map(this::toDeliveryDto)
                 .collect(Collectors.toList());
@@ -151,13 +153,13 @@ public class DeliveryService {
         String orderAction = orderChangeDto.getOrderChange().toUpperCase();
 
         if (OrderStatus.DELIVERY_PICKING.toString().equals(orderAction)) {
-            rabbitMQProducerService.sendMessage("<courier_name> will pick that order!", "courier.response");
+            rabbitProducerService.sendMessage("<courier_name> will pick that order!", "courier.response");
             orderEntity.setCourier(courierRepository.findCourierById(1L));
         } else if (OrderStatus.DELIVERY_DENIED.toString().equals(orderAction)) {
-            rabbitMQProducerService.sendMessage("Delivery denied", "courier.response");
+            rabbitProducerService.sendMessage("Delivery denied", "courier.response");
         }
 
-        rabbitMQProducerService.sendMessage("New status: " + orderAction, "delivery.status.update");
+        rabbitProducerService.sendMessage("New status: " + orderAction, "delivery.status.update");
 
         orderEntity.setStatus(OrderStatus.valueOf(orderAction));
         orderRepository.save(orderEntity);
@@ -165,7 +167,7 @@ public class DeliveryService {
         return ResponseEntity.ok().build();
     }
 
-    public void processNewDelivery(Order order) {
+    public void processNewDelivery(Order order) throws InterruptedException {
 
         Restaurant restaurant = restaurantRepository.findById(order.getRestaurant().getId())
                 .orElseThrow(() -> new EntityException(StatusException.RESTAURANT_NOT_FOUND));
@@ -174,6 +176,8 @@ public class DeliveryService {
         List<Courier> waitingCouriers = courierRepository.findAllByStatus(CourierStatus.PENDING);
 
         if (waitingCouriers.isEmpty()) {
+            wait(120000);
+            processNewDelivery(order);
 
         }
 
@@ -191,10 +195,9 @@ public class DeliveryService {
     private void sendMessageToNearbyCourier(Map<Double, Courier> nearbyCouriers, Order order) {
 
         Courier nearbyCourier = nearbyCouriers.remove(Collections.min(nearbyCouriers.keySet()));
-
         if (nearbyCourier.getStatus().equals(CourierStatus.PICKING)) {
             order.setCourier(nearbyCourier);
-        } else if (nearbyCourier.getStatus().equals(CourierStatus.DENIED)) {
+        } else {
             sendMessageToNearbyCourier(nearbyCouriers, order);
         }
     }

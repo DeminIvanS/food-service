@@ -9,5 +9,6 @@ import lombok.experimental.Accessors;
 public class RestaurantDto {
 
     private String address;
+    private Double distance;
 
 }
