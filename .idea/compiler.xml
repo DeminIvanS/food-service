@@ -15,31 +15,15 @@
         <module name="notification-service" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="delivery" target="11" />
-      <module name="delivery_service" target="11" />
-      <module name="dependency_bom" target="11" />
-      <module name="liga_education" target="1.8" />
-      <module name="liga_education (1)" target="11" />
-      <module name="liga_education (2)" target="1.8" />
-      <module name="oerder-service" target="11" />
-      <module name="properties-bom" target="11" />
-      <module name="second_day" target="1.7" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="common" options="-parameters" />
-      <module name="delivery" options="-parameters" />
       <module name="delivery-service" options="-parameters" />
-      <module name="delivery_service" options="-parameters" />
-      <module name="dependency_bom" options="" />
       <module name="kitchen-service" options="-parameters" />
       <module name="migration" options="-parameters" />
       <module name="notification-service" options="-parameters" />
-      <module name="oerder-service" options="-parameters" />
       <module name="order-service" options="-parameters" />
-      <module name="properties-bom" options="-parameters" />
     </option>
   </component>
 </project>

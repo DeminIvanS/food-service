@@ -19,7 +19,7 @@ import ru.liga.model.entities.Order;
 import ru.liga.model.entities.Restaurant;
 import ru.liga.model.statuses.CourierStatus;
 import ru.liga.model.statuses.OrderStatus;
-import ru.liga.rabbit.RabbitProducerServiceImpl;
+import ru.liga.rabbitMQ.RabbitProducerServiceImpl;
 import ru.liga.repository.CourierRepository;
 import ru.liga.repository.CustomerRepository;
 import ru.liga.repository.OrderRepository;

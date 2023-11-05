@@ -18,7 +18,7 @@ public class QueueListener {
     private final DeliveryService deliveryService;
 
     @RabbitListener(queues = "postNewDelivery")
-    public void processDeliveryQueue(String message) {
+    public void processDeliveryQueue(String message) throws InterruptedException {
 
         log.info("New delivery!");
 
