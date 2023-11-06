@@ -18,6 +18,8 @@
         <spring.version>2.7.16</spring.version>
         <springdoc.version>1.5.9</springdoc.version>
         <mybatis.version>3.0.2</mybatis.version>
+        <mybatis.spring>2.1.1</mybatis.spring>
+        <mapper.version>3.2.0</mapper.version>
         <snakeyaml>2.2</snakeyaml>
         <lombok.version>1.18.30</lombok.version>
         <maven.compiler.source>11</maven.compiler.source>
@@ -28,6 +30,9 @@
         <java.version>11</java.version>
         <rabbit-test.version>2.4.16</rabbit-test.version>
         <openfeign.version>3.1.8</openfeign.version>
+        <gateway.version>3.0.4</gateway.version>
+        <oauth-server.version>0.3.0</oauth-server.version>
+        <session-core.version>2.7.4</session-core.version>
     </properties>
 
     <dependencyManagement>
@@ -37,7 +42,6 @@
                 <artifactId>spring-boot-starter-actuator</artifactId>
                 <version>${spring.version}</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
             <dependency>
                 <groupId>org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
@@ -117,6 +121,36 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-openfeign</artifactId>
                 <version>${openfeign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-oauth2-client</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-oauth2-authorization-server</artifactId>
+                <version>${oauth-server.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-gateway</artifactId>
+                <version>${gateway.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.session</groupId>
+                <artifactId>spring-session-core</artifactId>
+                <version>${session-core.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

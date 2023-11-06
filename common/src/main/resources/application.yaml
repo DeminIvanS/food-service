@@ -15,6 +15,13 @@ spring:
   liquibase:
     change-log: classpath:db/changelog.xml
 
+    spring:
+      rabbitmq:
+        username: rabbit
+        password: admin123
+        host: localhost
+        port: 15672
+
 management:
 endpoints:
 web:
