@@ -1,0 +1,5 @@
+ru\liga\rabbit\config\RoutingMQConfig.class
+ru\liga\NotificationServiceApp.class
+ru\liga\rabbit\RabbitProducerServiceImpl.class
+ru\liga\rabbit\RabbitProducerService.class
+ru\liga\rabbit\QueueListener.class

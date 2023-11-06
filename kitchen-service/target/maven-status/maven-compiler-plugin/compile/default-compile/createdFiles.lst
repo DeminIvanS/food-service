@@ -1,0 +1,13 @@
+ru\liga\service\KitchenService.class
+ru\liga\dto\OrderDto.class
+ru\liga\rabbit\RabbitProducerServiceImpl.class
+ru\liga\dto\RestaurantMenuItemDto.class
+ru\liga\controller\KitchenController.class
+ru\liga\KitchenServiceApp.class
+ru\liga\rabbit\config\RoutingMQConfig.class
+ru\liga\rabbit\QueueListener.class
+ru\liga\dto\OrderChangeDto.class
+ru\liga\client\DeliveryClient.class
+ru\liga\dto\OrderItemDto.class
+ru\liga\dto\PriceDto.class
+ru\liga\rabbit\RabbitProducerService.class

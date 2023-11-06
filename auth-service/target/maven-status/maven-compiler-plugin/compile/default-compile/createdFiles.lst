@@ -1,0 +1,11 @@
+ru\liga\config\OAuth2SecurityConfig.class
+ru\liga\controller\AuthController.class
+ru\liga\model\CustomUserDetails.class
+ru\liga\dto\RegistrationDto$RegistrationDtoBuilder.class
+ru\liga\dto\RegistrationDto.class
+ru\liga\AuthServiceApp.class
+ru\liga\config\UserAuthenticationProvider.class
+ru\liga\config\UserAuthConverter.class
+ru\liga\dto\UserDto.class
+ru\liga\service\UserService.class
+ru\liga\dto\UserDto$UserDtoBuilder.class

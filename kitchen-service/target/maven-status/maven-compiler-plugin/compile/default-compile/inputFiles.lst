@@ -1,0 +1,13 @@
+C:\Users\Ivan\IdeaProjects\ru-liga-food-service\kitchen-service\src\main\java\ru\liga\dto\OrderChangeDto.java
+C:\Users\Ivan\IdeaProjects\ru-liga-food-service\kitchen-service\src\main\java\ru\liga\dto\RestaurantMenuItemDto.java
+C:\Users\Ivan\IdeaProjects\ru-liga-food-service\kitchen-service\src\main\java\ru\liga\client\DeliveryClient.java
+C:\Users\Ivan\IdeaProjects\ru-liga-food-service\kitchen-service\src\main\java\ru\liga\KitchenServiceApp.java
+C:\Users\Ivan\IdeaProjects\ru-liga-food-service\kitchen-service\src\main\java\ru\liga\controller\KitchenController.java
+C:\Users\Ivan\IdeaProjects\ru-liga-food-service\kitchen-service\src\main\java\ru\liga\dto\OrderItemDto.java
+C:\Users\Ivan\IdeaProjects\ru-liga-food-service\kitchen-service\src\main\java\ru\liga\rabbit\RabbitProducerServiceImpl.java
+C:\Users\Ivan\IdeaProjects\ru-liga-food-service\kitchen-service\src\main\java\ru\liga\dto\PriceDto.java
+C:\Users\Ivan\IdeaProjects\ru-liga-food-service\kitchen-service\src\main\java\ru\liga\rabbit\config\RoutingMQConfig.java
+C:\Users\Ivan\IdeaProjects\ru-liga-food-service\kitchen-service\src\main\java\ru\liga\service\KitchenService.java
+C:\Users\Ivan\IdeaProjects\ru-liga-food-service\kitchen-service\src\main\java\ru\liga\dto\OrderDto.java
+C:\Users\Ivan\IdeaProjects\ru-liga-food-service\kitchen-service\src\main\java\ru\liga\rabbit\RabbitProducerService.java
+C:\Users\Ivan\IdeaProjects\ru-liga-food-service\kitchen-service\src\main\java\ru\liga\rabbit\QueueListener.java

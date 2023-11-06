@@ -1,0 +1,15 @@
+ru\liga\service\OrderService.class
+ru\liga\dto\MenuItemDto.class
+ru\liga\dto\OrderDto.class
+ru\liga\rabbit\RabbitProducerServiceImpl.class
+ru\liga\dto\RestaurantDto.class
+ru\liga\request\OrderItemReq.class
+ru\liga\request\OrderReq.class
+ru\liga\mapper\RestaurantMapper.class
+ru\liga\rabbit\config\RoutingMQConfig.class
+ru\liga\OrderServiceApp.class
+ru\liga\response\ResponseCreateOrder.class
+ru\liga\controllers\OrderController.class
+ru\liga\rabbit\QueueListener.class
+ru\liga\dto\OrderItemDto.class
+ru\liga\rabbit\RabbitProducerService.class
