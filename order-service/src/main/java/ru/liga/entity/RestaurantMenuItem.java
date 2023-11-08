@@ -26,6 +26,8 @@ public class RestaurantMenuItem {
     @JoinColumn(name = "restaurant_id")
     private UUID restaurantId;
 
+    private String name;
+
     private Double price;
 
     private String image;

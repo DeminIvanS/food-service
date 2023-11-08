@@ -33,7 +33,7 @@ public class Restaurant {
 
     private String name;
 
-
+    @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
     private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "restaurantId", fetch = FetchType.LAZY)

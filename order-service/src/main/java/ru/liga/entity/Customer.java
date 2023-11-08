@@ -14,7 +14,8 @@ import java.util.UUID;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Getter
+@Setter
 @ToString
 @Accessors(chain = true)
 public class Customer {
@@ -30,7 +31,7 @@ public class Customer {
 
     private String address;
 
-
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private List<Order> orders = new ArrayList<>();
 
     public void addOrder(Order order) {
@@ -41,14 +42,6 @@ public class Customer {
     public void removeOrder(Order order) {
         orders.remove(order);
         order.setCustomer(null);
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 }
 

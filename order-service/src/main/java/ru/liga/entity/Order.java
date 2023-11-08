@@ -28,7 +28,7 @@ public class Order {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn()
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,8 +46,6 @@ public class Order {
     @OneToMany(mappedBy = "orderId", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> items = new ArrayList<>();
 
-
-
     public void addOrderItem(OrderItem orderItem) {
         items.add(orderItem);
         orderItem.setOrderId(this.id);
@@ -57,4 +55,5 @@ public class Order {
         items.remove(orderItem);
         orderItem.setOrderId(null);
     }
+
 }
