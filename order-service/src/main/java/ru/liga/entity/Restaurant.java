@@ -33,7 +33,7 @@ public class Restaurant {
 
     private String name;
 
-    @OneToMany(mappedBy = "restaurantId", fetch = FetchType.LAZY)
+
     private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "restaurantId", fetch = FetchType.LAZY)
@@ -51,7 +51,7 @@ public class Restaurant {
 
     public void addOrder(Order order) {
         orders.add(order);
-        order.setRestaurant(this.id);
+        order.setRestaurant(this);
     }
 
     public void removeOrder(Order order) {

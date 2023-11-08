@@ -1,5 +1,6 @@
 package ru.liga.controller;
 
+
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +9,6 @@ import ru.liga.service.DeliveryService;
 
 import java.util.Collection;
 import java.util.UUID;
-
 
 @RestController
 @RequestMapping("/delivery")
@@ -20,22 +20,22 @@ public class DeliveryController {
         this.deliveryService = deliveryService;
     }
 
-    @Operation(summary = "Get available deliveries")
+    @Operation(summary = "Get orders")
     @GetMapping
     public ResponseEntity<Collection<OrderMessage>> getAvailableDeliveries() {
         return ResponseEntity.ok(deliveryService.getAvailableDeliveries());
     }
 
-    @Operation(summary = "Accept delivery order")
-    @PostMapping("/{id}/take")
-    public ResponseEntity<String> acceptDelivery(@PathVariable("id") UUID id) {
-        String newStatus = "delivery_picking";
+    @Operation(summary = "accept order")
+    @PostMapping("/{id}/accept")
+    public ResponseEntity<String> setDeliveryAccept(@PathVariable("id") UUID id) {
+        String newStatus = "delivery_accept";
         return ResponseEntity.ok(deliveryService.setDeliveryStatusByOrderId(id, newStatus));
     }
 
-    @Operation(summary = "Order Complete")
+    @Operation(summary = "delivery complete")
     @PostMapping("/{id}/complete")
-    public ResponseEntity<String> completeDelivery(@PathVariable("id") UUID id) {
+    public ResponseEntity<String> setDeliveryComplete(@PathVariable("id") UUID id) {
         String newStatus = "delivery_complete";
         return ResponseEntity.ok(deliveryService.setDeliveryStatusByOrderId(id, newStatus));
     }

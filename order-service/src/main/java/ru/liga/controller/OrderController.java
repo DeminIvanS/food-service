@@ -4,12 +4,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.liga.OrderService;
+import ru.liga.service.OrderService;
 import ru.liga.dto.OrderActionDto;
 import ru.liga.dto.OrderDto;
 import ru.liga.request.OrderRequest;
+import ru.liga.response.ResponseDto;
 
-import javax.validation.constraints.Min;
+import java.util.UUID;
 
 
 @RestController
@@ -32,9 +33,9 @@ public class OrderController {
 
     @Operation(summary = "get order from ID")
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDto> getOrderById(@PathVariable("id") @Min(0)
-                                                 @Parameter(description = "Order Id", required = true)
-                                                 Long id) {
+    public ResponseEntity<OrderDto> getOrderById(@PathVariable("id")
+                                                     @Parameter(description = "Order Id", required = true)
+                                                     UUID id) {
         return orderService.getOrderById(id);
     }
 
@@ -45,7 +46,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateOrderStatus(@PathVariable("id") Long id,
+    public ResponseEntity<String> updateOrderStatus(@PathVariable("id") UUID id,
                                                     @RequestBody OrderActionDto orderAction) {
         String newStatus = orderAction.getOrderAction();
         String response = orderService.updateOrderStatusById(id, newStatus);

@@ -20,7 +20,7 @@ public class KitchenService {
 
     private final RabbitMQProducerServiceImpl rabbitMQProducerService;
     private final ObjectMapper objectMapper;
-    private final Map<UUID, OrderMessage> orders = new HashMap<>();
+    private final Map<UUID, OrderMessage> orders = new HashMap<UUID, OrderMessage>();
 
     private boolean isKitchenAcceptOrder(OrderMessage message) {
 
@@ -67,7 +67,7 @@ public class KitchenService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        log.info("New order: " + orderMessage);
+        log.info("Поступил новый заказ: " + orderMessage);
         UUID orderId = orderMessage.getId();
         if (isKitchenAcceptOrder(orderMessage)) {
             sendMessageOfStatusUpdate(orderId, "kitchen_accepted");

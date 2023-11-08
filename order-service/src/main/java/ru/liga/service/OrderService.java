@@ -1,4 +1,4 @@
-package ru.liga;
+package ru.liga.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,10 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.liga.dto.MenuItemDto;
+import ru.liga.dto.MessageStatusUpdate;
 import ru.liga.dto.OrderDto;
 import ru.liga.dto.OrderMessage;
 import ru.liga.entity.*;
@@ -22,7 +24,7 @@ import ru.liga.request.OrderRequest;
 import ru.liga.response.ResponseDto;
 import ru.liga.status.OrderStatus;
 
-import java.security.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,12 +43,13 @@ public class OrderService {
     private final ObjectMapper objectMapper;
 
     private String tryToSerializeOrderEntityAsString(Order order) {
-        Map<Long, Long> orderItemsIdAndQuantity = new HashMap<>();
+        Map<UUID, Long> orderItemsIdAndQuantity = new HashMap<>();
         order.getItems()
                 .forEach(item -> orderItemsIdAndQuantity.put(item.getId(), item.getQuantity()));
 
         OrderMessage message = new OrderMessage()
                 .setId(order.getId())
+
                 .setCustomerCoordinates(order.getCustomer().getAddress())
                 .setRestaurantCoordinates(order.getRestaurant().getAddress())
                 .setOrderItemsIdAndQuantity(orderItemsIdAndQuantity);
@@ -68,12 +71,12 @@ public class OrderService {
         List<RestaurantMenuItem> menu = restaurant.getRestaurantMenuItems();
 
         RestaurantMenuItem restaurantMenuItemEntity = restaurantMenuItemRepository.findById(menuItemId)
-                .orElseThrow(() -> new EntityException(ExceptionStatus.RESTAURANT_MENU_ITEM_NOT_FOUND));
+                .orElseThrow(() -> new EntityException(ExceptionStatus.MENU_ITEM_NOT_FOUND));
 
         if (!menu.contains(restaurantMenuItemEntity)) {
-            log.warn("Указанные позиции отсутствуют в меню ресторана " + restaurant.getName()
-                    + ". Доступные позиции для заказа: " + menu);
-            throw new EntityException(ExceptionStatus.RESTAURANT_MENU_ITEM_NOT_FOUND);
+            log.warn("Restaurant menu item not found " + restaurant.getName()
+                    + ". Items for order: " + menu);
+            throw new EntityException(ExceptionStatus.MENU_ITEM_NOT_FOUND);
         }
 
         return new OrderItem()
@@ -89,7 +92,7 @@ public class OrderService {
                 .setStatus(OrderStatus.CUSTOMER_CREATED)
                 .setCustomer(customer)
                 .setRestaurant(restaurant)
-                .setTimestamp(new Timestamp(System.currentTimeMillis()));
+                .setLocalDateTime(LocalDateTime.now());
     }
 
     public ResponseEntity<ResponseDto<OrderDto>> getOrders(int pageIndex, int pageSize) {
@@ -116,7 +119,7 @@ public class OrderService {
         return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<OrderDto> getOrderById(Long id) {
+    public ResponseEntity<OrderDto> getOrderById(UUID id) {
 
         Order orderEntity = orderRepository.findById(id)
                 .orElseThrow(() -> new EntityException(ExceptionStatus.ORDER_NOT_FOUND));
@@ -132,34 +135,35 @@ public class OrderService {
         UUID uuid = UUID.randomUUID();
 
         UUID restaurantId = orderRequest.getRestaurantId();
-        log.info("Поиск ресторана по id = " + restaurantId);
+        log.info("searched by id = " + restaurantId);
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new EntityException(ExceptionStatus.RESTAURANT_NOT_FOUND));
 
-        log.info("Поиск заказчика по id = 5");
-        Customer customer = customerRepository.findById(5L)
+        log.info("searched by UUID = 3");
+
+        Customer customer = customerRepository.findById(new UUID(3L,3L))
                 .orElseThrow(() -> new EntityException(ExceptionStatus.CUSTOMER_NOT_FOUND));
         Order orderEntity = mapOrderEntity(customer, restaurant);
 
-        log.info("Сохранение заказа в БД...");
+        log.info("saved into DB...");
         Order savedOrder = orderRepository.save(orderEntity);
-        log.info("Заказ " + savedOrder + " сохранён!");
+        log.info("Order " + savedOrder + " saved!");
 
         List<MenuItemDto> menuItemDTOS = orderRequest.getMenuItems();
 
-        log.info("Маппинг ДТО позиций заказа: " + menuItemDTOS + " на сущность...");
+        log.info("Mapping DTO item order: " + menuItemDTOS );
         List<OrderItem> orderItems = menuItemDTOS.stream()
                 .map(orderItem -> mapOrderItem(savedOrder, orderItem.getMenuItemId(), orderItem.getQuantity()))
                 .collect(Collectors.toList());
 
-        log.info("Маппинг успешный! Сохранение в базу...");
+        log.info("Mapping successfully! Saved in DB...");
         orderItemRepository.saveAll(orderItems);
-        log.info("Позиции заказа: " + orderItems + " сохранены!");
+        log.info("item order: " + orderItems + " saved!");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Заказ создан, ожидаем оплату");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Order created, waiting pay");
     }
 
-    public ResponseEntity<String> imitatePayment(Long id, Boolean isPaid) {
+    public ResponseEntity<String> imitatePayment(UUID id, Boolean isPaid) {
 
         if (isPaid == null) throw new IllegalArgumentException();
 
@@ -169,32 +173,32 @@ public class OrderService {
         OrderStatus currentOrderStatus = order.getStatus();
         if (isPaid && (currentOrderStatus == OrderStatus.CUSTOMER_CREATED
                 || currentOrderStatus == OrderStatus.CUSTOMER_CANCELLED)) {
-            orderEntity.setStatus(OrderStatus.CUSTOMER_PAID);
-            rabbitMQProducerService.sendMessage(tryToSerializeOrderEntityAsString(orderEntity),
+            order.setStatus(OrderStatus.CUSTOMER_PAID);
+            rabbitMQProducerService.sendMessage(tryToSerializeOrderEntityAsString(order),
                     "new.order");
         } else {
-            orderEntity.setStatus(OrderStatus.CUSTOMER_CANCELLED);
+            order.setStatus(OrderStatus.CUSTOMER_CANCELLED);
         }
 
-        orderRepository.save(orderEntity);
-        return ResponseEntity.ok("Статус заказа: " + currentOrderStatus);
+        orderRepository.save(order);
+        return ResponseEntity.ok("Status order: " + currentOrderStatus);
     }
 
-    public String updateOrderStatusById(Long id, String newStatus) {
+    public String updateOrderStatusById(UUID id, String newStatus) {
 
-        OrderEntity order = orderRepository.findById(id)
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new EntityException(ExceptionStatus.ORDER_NOT_FOUND));
 
         order.setStatus(OrderStatus.valueOf(newStatus.toUpperCase()));
         orderRepository.save(order);
 
-        return "Статус заказа id=" + id + " изменён на: " + newStatus;
+        return "Status order id=" + id + " changed: " + newStatus;
     }
 
     public void processStatusUpdate(String message) {
-        StatusUpdateMessage updateMessage;
+        MessageStatusUpdate updateMessage;
         try {
-            updateMessage = objectMapper.readValue(message, StatusUpdateMessage.class);
+            updateMessage = objectMapper.readValue(message, MessageStatusUpdate.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

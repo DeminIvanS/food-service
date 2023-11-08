@@ -1,6 +1,8 @@
 package ru.liga.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import ru.liga.entity.Order;
 import ru.liga.entity.OrderItem;
 
@@ -21,7 +23,7 @@ public class OrderDto {
     @Schema(description = "ItemList in order")
     private List<OrderItemDto> items;
 
-    public static OrderDto toOrderDto(Order order, UUID id) { //uuid restaurant
+    public static OrderDto toOrderDto(Order order, String id) { //uuid restaurant
 
         List<OrderItem> items =  order.getItems();
         List<OrderItemDto> itemDTOS = items.stream()
@@ -30,8 +32,8 @@ public class OrderDto {
 
         return new OrderDto()
                 .setId(order.getId())
-                .setItems(itemDTOS)
-                .setTimestamp(order.getLocalDateTime());
+                .setItems(itemDTOS).setLocalDateTime(LocalDateTime.now());
+
     }
 }
 

@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
-import ru.liga.dto.DeliveryConfirmationMessage;
 import ru.liga.dto.MessageStatusUpdate;
 import ru.liga.dto.OrderMessage;
 import ru.liga.handler.EntityException;
@@ -14,9 +13,10 @@ import ru.liga.handler.ExceptionStatus;
 import ru.liga.model.entity.Courier;
 import ru.liga.model.status.CourierStatus;
 import ru.liga.rabbit.service.RabbitMQProducerServiceImpl;
-import ru.liga.repository.CourierRepo;
+import ru.liga.repo.CourierRepo;
 
 import java.util.*;
+
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +24,10 @@ import java.util.*;
 @Slf4j
 public class DeliveryService {
 
-    private final CourierRepo courierRepo;
+    private final CourierRepo courierRepository;
     private final ObjectMapper objectMapper;
     private final RabbitMQProducerServiceImpl rabbitMQProducerService;
-    private final Map<UUID, OrderMessage> orders = new HashMap<>();
+    private final Map<UUID, OrderMessage> orders = new HashMap<UUID, OrderMessage>();
 
     private double calculateDistance(String courierCoordinates, String destinationCoordinates) {
         String[] parts1 = courierCoordinates.split(",");
@@ -35,7 +35,7 @@ public class DeliveryService {
 
         if (parts1.length != 2 || parts2.length != 2) {
             throw new IllegalArgumentException("Incorrect coordinate format\n" +
-                    "Correct coordinate format: '12.34567890, 12.34567890' ");
+                    "Correct format: '12.3456789, 12.3465789' ");
         }
 
         double latitude1 = Double.parseDouble(parts1[0].trim());
@@ -64,22 +64,14 @@ public class DeliveryService {
         return earthRadius * c;
     }
 
-    private String tryToSerializeStatusUpdateAsString(UUID orderId, String newStatus) {
-        MessageStatusUpdate update = new MessageStatusUpdate().setNewStatus(newStatus).setOrderId(orderId);
+    private String tryToSerializeStatusUpdateAsString(UUID orderId, UUID courierId, String newStatus) {
+        MessageStatusUpdate update = new MessageStatusUpdate()
+                .setNewStatus(newStatus)
+                .setOrderId(orderId)
+                .setCourierId(courierId);
         String message;
         try {
             message = objectMapper.writeValueAsString(update);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        return message;
-    }
-
-    private String tryToSerializeDeliveryPickingAsString(UUID orderId, UUID courierId) {
-        DeliveryConfirmationMessage confirmationMessage = new DeliveryConfirmationMessage().setOrderId(orderId).setCourierId(courierId);
-        String message;
-        try {
-            message = objectMapper.writeValueAsString(confirmationMessage);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -91,17 +83,17 @@ public class DeliveryService {
     }
 
     public String setDeliveryStatusByOrderId(UUID orderId, String newStatus) {
-        String message = tryToSerializeStatusUpdateAsString(orderId, newStatus);
+        String message = tryToSerializeStatusUpdateAsString(orderId, null, newStatus);
         rabbitMQProducerService.sendMessage(message, "delivery.status.update");
 
         if ("delivery_picking".equals(newStatus)) {
-            Courier courier = courierRepo.findById(1L)
+            Courier courier = courierRepository.findById(1L)
                     .orElseThrow(() -> new EntityException(ExceptionStatus.COURIER_NOT_FOUND));
-            rabbitMQProducerService.sendMessage(tryToSerializeDeliveryPickingAsString(orderId, courier.getId()),
-                    "courier.appointment");
+            rabbitMQProducerService.sendMessage(tryToSerializeStatusUpdateAsString(orderId, courier.getId(), newStatus),
+                    "delivery.status.update");
         }
         orders.remove(orderId);
-        return "Order status id=" + orderId + " changed: " + newStatus;
+        return "Статус заказа id=" + orderId + " изменён на: " + newStatus;
     }
 
     public void processNewDelivery(String message) {
@@ -115,7 +107,7 @@ public class DeliveryService {
         orders.put(order.getId(), order);
 
         String restaurantCoordinates = order.getRestaurantCoordinates();
-        List<Courier> waitingCouriers = courierRepo.findAllByStatus(CourierStatus.PENDING);
+        List<Courier> waitingCouriers = courierRepository.findAllByStatus(CourierStatus.PENDING);
         Map<Double, Courier> courierDistances = new HashMap<>();
 
         for (Courier courier : waitingCouriers) {
@@ -130,7 +122,7 @@ public class DeliveryService {
     private void sendMessageToNearestCourier(Map<Double, Courier> nearestCouriers, OrderMessage order) {
 
         Courier nearbyCourier = nearestCouriers.remove(Collections.min(nearestCouriers.keySet()));
-        log.info("New Delivery: " + order );
+        log.info("New order to delivery: " + order);
 
     }
 

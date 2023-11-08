@@ -28,12 +28,12 @@ public class Order {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    private UUID customer;
+    @JoinColumn()
+    private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
-    private UUID restaurant;
+    private Restaurant restaurant;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
@@ -45,6 +45,8 @@ public class Order {
 
     @OneToMany(mappedBy = "orderId", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> items = new ArrayList<>();
+
+
 
     public void addOrderItem(OrderItem orderItem) {
         items.add(orderItem);
